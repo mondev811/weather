@@ -20,11 +20,20 @@ const countries = [
 ];
 export const Form = () => {
   const [animationButton] = useState(new Animated.Value(1));
+
   const animationIn = () => {
-    console.log('in');
+    Animated.spring(animationButton, {
+      toValue: 0.9,
+    }).start();
   };
   const animationOut = () => {
-    console.log('out');
+    Animated.spring(animationButton, {
+      toValue: 1,
+    }).start();
+  };
+
+  const styleAnimation = {
+    transform: [{scale: animationButton}],
   };
 
   return (
@@ -46,9 +55,9 @@ export const Form = () => {
         <TouchableWithoutFeedback
           onPressIn={() => animationIn()}
           onPressOut={() => animationOut()}>
-          <View style={styles.btn_search}>
+          <Animated.View style={[styles.btn_search, styleAnimation]}>
             <Text style={styles.text_search}>Search weather</Text>
-          </View>
+          </Animated.View>
         </TouchableWithoutFeedback>
       </View>
     </>
