@@ -4,10 +4,37 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React from 'react';
-import {Form} from './src/components/Form';
+import React, {useState, useEffect} from 'react';
+import {Form, Result} from './src/components';
 
 const App = () => {
+  const [weather, setWeather] = useState();
+  const [params, setParams] = useState();
+
+  useEffect(() => {
+    if (!params || params.city === '' || params.country === '') {
+      return;
+    }
+
+    const fetchData = async () => {
+      const APIKey = '0e059bfafedea94f8dd510325988a5d5';
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${params.city},${params.country}&appid=${APIKey}&units=imperial`;
+      try {
+        const response = await fetch(url);
+        const tempValues = await response.json();
+        setWeather({
+          current: tempValues.main?.temp,
+          min: tempValues.main?.temp_min,
+          max: tempValues.main?.temp_max,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [params]);
+
   const hideKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -15,8 +42,9 @@ const App = () => {
   return (
     <TouchableWithoutFeedback onPress={() => hideKeyboard()}>
       <View style={styles.app}>
+        {weather && <Result weather={weather} />}
         <View style={styles.content}>
-          <Form />
+          <Form onSubmit={setParams} />
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -31,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(71,149, 212)',
     justifyContent: 'center',
   },
-  container: {
+  content: {
     marginHorizontal: '2.5%',
   },
 });

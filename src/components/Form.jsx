@@ -18,17 +18,21 @@ const countries = [
   {id: 6, name: 'Spain', code: 'ES'},
   {id: 7, name: 'Peru', code: 'PE'},
 ];
-export const Form = () => {
+export const Form = ({onSubmit}) => {
   const [animationButton] = useState(new Animated.Value(1));
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
 
   const animationIn = () => {
     Animated.spring(animationButton, {
       toValue: 0.9,
+      useNativeDriver: true,
     }).start();
   };
   const animationOut = () => {
     Animated.spring(animationButton, {
       toValue: 1,
+      useNativeDriver: true,
     }).start();
   };
 
@@ -44,8 +48,13 @@ export const Form = () => {
             style={styles.input}
             placeholder="City"
             placeholderTextColor={'#666'}
+            value={city}
+            onChangeText={value => setCity(value)}
           />
-          <Picker itemStyle={{height: 120, backgroundColor: '#FFF'}}>
+          <Picker
+            itemStyle={{height: 120, backgroundColor: '#FFF'}}
+            selectedValue={country}
+            onValueChange={value => setCountry(value)}>
             <Picker.Item label={'---Select a country---'} value="" />
             {countries.map(c => (
               <Picker.Item label={c.name} value={c.code} key={c.id} />
@@ -54,7 +63,8 @@ export const Form = () => {
         </View>
         <TouchableWithoutFeedback
           onPressIn={() => animationIn()}
-          onPressOut={() => animationOut()}>
+          onPressOut={() => animationOut()}
+          onPress={() => onSubmit({city, country})}>
           <Animated.View style={[styles.btn_search, styleAnimation]}>
             <Text style={styles.text_search}>Search weather</Text>
           </Animated.View>
