@@ -17,7 +17,7 @@ const App = () => {
     }
 
     const fetchData = async () => {
-      const APIKey = '0e059bfafedea94f8dd510325988a5d5';
+      const APIKey = '';
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${params.city},${params.country}&appid=${APIKey}&units=imperial`;
       try {
         const response = await fetch(url);
